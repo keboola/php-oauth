@@ -1,8 +1,8 @@
 {
-    "name": "keboola/codebuilder",
-    "description": "Execute JSON defined user scripts",
+    "name": "keboola/oauth",
+    "description": "Handle user authentication",
     "license": "MIT",
-	"keywords": ["user-script", "script", "user"],
+	"keywords": ["oauth"],
     "authors": [
         {
             "name": "Ondrej Vana",
