@@ -2,9 +2,9 @@
 
 namespace Keboola\OAuth;
 
-use	Syrup\ComponentBundle\Exception\SyrupComponentException,
-	Syrup\ComponentBundle\Exception\UserException,
-	Syrup\ComponentBundle\Controller\BaseController;
+use	Keboola\Syrup\Exception\SyrupComponentException,
+	Keboola\Syrup\Exception\UserException,
+	Keboola\Syrup\Controller\BaseController;
 use	Symfony\Component\HttpFoundation\Response,
 	Symfony\Component\HttpFoundation\Request,
 	Symfony\Component\HttpFoundation\Session\Attribute\AttributeBag,
