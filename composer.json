@@ -21,7 +21,7 @@
 	},
 	"autoload": {
 		"psr-0": {
-			"Keboola\\Code": "src/"
+			"Keboola\\OAuth": "src/"
 		}
 	}
 }
