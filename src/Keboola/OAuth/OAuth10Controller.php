@@ -12,7 +12,6 @@ use	Symfony\Component\HttpFoundation\Response,
  * Authentication flow diagram: @link http://oauth.net/core/diagram.png
  * Implemented using PHP's OAuth extension:
  * @link http://pecl.php.net/package/oauth
- * @TODO use guzzle's OAuth instead of PHP ext
  */
 abstract class OAuth10Controller extends OAuthController implements OAuthControllerInterface
 {
@@ -54,14 +53,14 @@ abstract class OAuth10Controller extends OAuthController implements OAuthControl
 
 		$oauth = new \OAuth($apiKeys["api-key"], $apiKeys["api-secret"]);
 
-		$tokens = $oauth->getRequestToken($this->requestTokenUrl, $this->getCallbackUrl($request));
+		$tokens = $oauth->getRequestToken($this->getRequestTokenUrl(), $this->getCallbackUrl($request));
 		$this->sessionBag->set("oauth_token", $tokens["oauth_token"]);
 		$this->sessionBag->set("oauth_token_secret", $tokens["oauth_token_secret"]);
 
 		return $this->redirect(
 			$this->getAuthenticateUrl($tokens["oauth_token"])
 // 			302,
-// 			["Authorization" => $oauth->getRequestHeader("POST", $this->requestTokenUrl)]
+// 			["Authorization" => $oauth->getRequestHeader("POST", $this->getRequestTokenUrl())]
 		);
 	}
 
@@ -80,9 +79,19 @@ abstract class OAuth10Controller extends OAuthController implements OAuthControl
 		$oauth = new \OAuth($apiKeys["api-key"], $apiKeys["api-secret"]);
 		$oauth->setToken($this->sessionBag->get("oauth_token"), $this->sessionBag->get("oauth_token_secret"));
 
-		$oauthResponse = $oauth->getAccessToken($this->accessTokenUrl, null, $request->query->get("oauth_verifier"));
+		$oauthResponse = $oauth->getAccessToken($this->getAccessTokenUrl(), null, $request->query->get("oauth_verifier"));
 
 		$this->storeOAuthData($oauthResponse);
 		return $this->returnResult($oauthResponse);
+	}
+
+	protected function getRequestTokenUrl()
+	{
+		return $this->requestTokenUrl;
+	}
+
+	protected function getAccessTokenUrl()
+	{
+		return $this->accessTokenUrl;
 	}
 }

@@ -2,9 +2,9 @@
 
 namespace Keboola\OAuth;
 
-use	Keboola\Syrup\Exception\SyrupComponentException,
-	Keboola\Syrup\Exception\UserException,
-	Keboola\Syrup\Controller\BaseController;
+use	Syrup\ComponentBundle\Exception\SyrupComponentException,
+	Syrup\ComponentBundle\Exception\UserException,
+	Syrup\ComponentBundle\Controller\BaseController;
 use	Symfony\Component\HttpFoundation\Response,
 	Symfony\Component\HttpFoundation\Request,
 	Symfony\Component\HttpFoundation\Session\Attribute\AttributeBag,
@@ -78,12 +78,17 @@ abstract class OAuthController extends BaseController
 	{
 		$storageApi = $this->getStorageApi();
 
+		$tableId = "sys.c-{$this->appName}." . $this->sessionBag->get("config");
+		if (!$storageApi->tableExists($tableId)) {
+			throw new UserException(sprintf("Configuration %s doesn't exist!", $this->sessionBag->get("config")));
+		}
+
 		foreach($data as $key => $value) {
 			// Try to guess whether to save the attribute as protected or not, by looking for "token" in its name
 			$protected = (strpos($key, "token") === false) ? false : true;
 
 			$storageApi->setTableAttribute(
-				"sys.c-{$this->appName}." . $this->sessionBag->get("config"),
+				$tableId,
 				"oauth." . $key,
 				$value,
 				$protected
@@ -109,7 +114,7 @@ abstract class OAuthController extends BaseController
 	 */
 	protected function getAppParams()
 	{
-		return $this->getParam(explode("-", $this->appName)[1], true);
+		return $this->getParam(explode("-", $this->appName, 2)[1], true);
 	}
 
 	/**

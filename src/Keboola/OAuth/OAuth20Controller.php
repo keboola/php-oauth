@@ -2,7 +2,7 @@
 
 namespace Keboola\OAuth;
 
-use	Keboola\OAuth\Exception\UserException;
+use	Syrup\ComponentBundle\Exception\UserException;
 use	Symfony\Component\HttpFoundation\Response,
 	Symfony\Component\HttpFoundation\Request;
 use	GuzzleHttp\Client as GuzzleClient,
@@ -108,7 +108,7 @@ abstract class OAuth20Controller extends OAuthController implements OAuthControl
 
 		$guzzle = new GuzzleClient();
 		try {
-			$response = $guzzle->post($this->tokenUrl, array("body" => array(
+			$response = $guzzle->post($this->getTokenUrl(), array("body" => array(
 				"client_id" => $this->getClientId(),
 				"client_secret" => $this->getClientSecret(),
 				"grant_type" => $this->grantType,
@@ -138,5 +138,10 @@ abstract class OAuth20Controller extends OAuthController implements OAuthControl
 
 		$this->storeOAuthData($responseData);
 		return $this->returnResult($responseData);
+	}
+
+	protected function getTokenUrl()
+	{
+		return $this->tokenUrl;
 	}
 }
