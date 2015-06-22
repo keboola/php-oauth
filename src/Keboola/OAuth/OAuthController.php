@@ -243,10 +243,14 @@ abstract class OAuthController extends BaseController
 		return $this->getOAuthAction($request);
 	}
 
+	/**
+	 * @param ParameterBag $params
+	 * @throws UserException
+	 */
 	protected function checkParams(ParameterBag $params)
 	{
 		foreach($this->requiredParams as $name) {
-			if ($params->has($name)) {
+			if (!$params->has($name)) {
 				throw new UserException("Missing parameter '{$name}'");
 			}
 		}
