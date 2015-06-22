@@ -8,7 +8,8 @@ use	Keboola\Syrup\Exception\SyrupComponentException,
 use	Symfony\Component\HttpFoundation\Response,
 	Symfony\Component\HttpFoundation\Request,
 	Symfony\Component\HttpFoundation\Session\Attribute\AttributeBag,
-	Symfony\Component\HttpFoundation\Session\Session;
+	Symfony\Component\HttpFoundation\Session\Session,
+	Symfony\Component\HttpFoundation\ParameterBag;
 use	Keboola\StorageApi\Client as StorageApi;
 use	GuzzleHttp\Client as GuzzleClient;
 
@@ -43,11 +44,16 @@ abstract class OAuthController extends BaseController
 	 */
 	protected $sessionBag;
 
-	protected $defaultResponseHeaders = array(
+	/**
+	 * @var array
+	 */
+	protected $requiredParams = ['token', 'config'];
+
+	protected $defaultResponseHeaders = [
 		"Content-Type" => "application/json",
 		"Access-Control-Allow-Origin" => "*",
 		"Connection" => "close"
-	);
+	];
 
 	/**
 	 * Initialize the OAuth action.
@@ -159,12 +165,7 @@ abstract class OAuthController extends BaseController
 	 */
 	protected function initSession(Request $request)
 	{
-		if (!$request->request->has('token')) {
-			throw new UserException("Missing parameter 'token'");
-		}
-		if (!$request->request->has('config')) {
-			throw new UserException("Missing parameter 'config'");
-		}
+		$this->checkParams($request->request);
 
 		$this->initSessionBag();
 		foreach($request->request->all() as $key => $value) {
@@ -233,17 +234,22 @@ abstract class OAuthController extends BaseController
 	 */
 	public function externalAuthAction(Request $request)
 	{
-		if (!$request->query->has('token')) {
-			throw new UserException("Missing parameter 'token'");
-		}
-		if (!$request->query->has('config')) {
-			throw new UserException("Missing parameter 'config'");
-		}
+		$this->checkParams($request->query);
 
-		$request->request->set('token', $request->query->get('token'));
-		$request->request->set('config', $request->query->get('config'));
+		foreach($request->query->all() as $k => $v) {
+			$request->request->set($k, $v);
+		}
 
 		return $this->getOAuthAction($request);
+	}
+
+	protected function checkParams(ParameterBag $params)
+	{
+		foreach($this->requiredParams as $name) {
+			if ($params->has($name)) {
+				throw new UserException("Missing parameter '{$name}'");
+			}
+		}
 	}
 
 	/**
