@@ -2,7 +2,7 @@
 
 namespace Keboola\OAuth;
 
-use	Syrup\ComponentBundle\Exception\UserException;
+use	Keboola\Syrup\Exception\UserException;
 use	Symfony\Component\HttpFoundation\Response,
 	Symfony\Component\HttpFoundation\Request;
 use	GuzzleHttp\Client as GuzzleClient,
