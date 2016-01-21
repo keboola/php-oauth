@@ -141,11 +141,12 @@ abstract class OAuthController extends BaseController
 	/**
 	 * Init OAuth session bag
 	 *
+	 * @param bool $reset
 	 * @return AttributeBag
 	 */
-	protected function initSessionBag()
+	protected function initSessionBag($reset = false)
 	{
-		if (!$this->sessionBag) {
+		if ($reset || !$this->sessionBag) {
 			$name = str_replace("-", "", $this->appName);
 			/** @var Session $session */
 			$session = $this->container->get('session');
@@ -167,7 +168,7 @@ abstract class OAuthController extends BaseController
 	{
 		$this->checkParams($request->request);
 
-		$this->initSessionBag();
+		$this->initSessionBag(true);
 		foreach($request->request->all() as $key => $value) {
 			$this->sessionBag->set($key, $value);
 		}
