@@ -12,8 +12,8 @@
     "require": {
 		"php": ">=5.4.0",
         "ext-oauth": "*",
-        "guzzlehttp/guzzle": "~4.2.3",
-        "keboola/syrup": "~2.2.10",
+        "guzzlehttp/guzzle": "~6.1",
+        "keboola/syrup": "~3.0.0-rc2",
         "keboola/php-utils": "~0.1.8"
     },
 	"require-dev": {
