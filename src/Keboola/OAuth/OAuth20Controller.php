@@ -14,6 +14,7 @@ use	Keboola\Utils\Utils;
  *
  * Handle the OAuth 2.0 authentication process
  * @todo bool $useHash to allow not using hash in case "state" is not allowed?
+ * @deprecated
  */
 abstract class OAuth20Controller extends OAuthController implements OAuthControllerInterface
 {

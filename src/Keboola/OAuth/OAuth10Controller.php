@@ -12,6 +12,7 @@ use	Symfony\Component\HttpFoundation\Response,
  * Authentication flow diagram: @link http://oauth.net/core/diagram.png
  * Implemented using PHP's OAuth extension:
  * @link http://pecl.php.net/package/oauth
+ * @deprecated
  */
 abstract class OAuth10Controller extends OAuthController implements OAuthControllerInterface
 {
