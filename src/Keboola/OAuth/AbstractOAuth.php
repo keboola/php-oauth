@@ -17,5 +17,7 @@ abstract class AbstractOAuth
      * getOAuthUrl (2.0)/ getAuthenticateUrl (1.0)
      * @param array $config ?
      */
-    abstract function createAuthUrl();
+//     abstract function createAuthUrl();
+
+// TODO handle callback
 }
