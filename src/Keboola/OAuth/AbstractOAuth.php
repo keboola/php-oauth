@@ -3,12 +3,39 @@ namespace Keboola\OAuth;
 
 abstract class AbstractOAuth
 {
-    public function __construct()
-    {
+    /**
+     * @var string
+     */
+    protected $appKey;
 
+    /**
+     * @var string
+     */
+    protected $appSecret;
+
+    /**
+     * @var string
+     */
+    protected $authUrl;
+
+    /**
+     * @var string
+     */
+    protected $tokenUrl;
+
+    public function __construct(array $config)
+    {
+        $this->appKey = $config['app_key'];
+        $this->appSecret = $config['app_secret'];
+        $this->authUrl = $config['auth_url'];
+        $this->tokenUrl = $config['token_url'];
     }
 
-    abstract function createRedirectUrl();
+    /**
+     * @param string $callbackUrl
+     * @return array ['url' => '', 'sessionData' => [...]]
+     */
+    abstract function createRedirectData($callbackUrl);
 
     /**
      * Give the function API info, both need auth_url, 2.0 needs app_key
