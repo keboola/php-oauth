@@ -29,6 +29,14 @@ class OAuth10 extends AbstractOAuth
         ];
     }
 
+    public function createToken($callbackUrl, array $sessionData, array $query)
+    {
+        $oauth = new \OAuth($this->appKey, $this->appSecret);
+        $oauth->setToken($sessionData['oauth_token'], $sessionData['oauth_token_secret']);
+
+        return $oauth->getAccessToken($this->tokenUrl, null, $query['oauth_verifier']);
+    }
+
     protected function getRequestTokenUrl()
     {
         return $this->requestTokenUrl;

@@ -38,13 +38,12 @@ abstract class AbstractOAuth
     abstract function createRedirectData($callbackUrl);
 
     /**
-     * Give the function API info, both need auth_url, 2.0 needs app_key
-     * 2.0 then needs redir_url, 1.0 needs token generated at request_token_url
-     * Therefore the config should be created in createRedirectUrl to suit the case
-     * getOAuthUrl (2.0)/ getAuthenticateUrl (1.0)
-     * @param array $config ?
+     * 1.0: $sessionData; $request->query->get("oauth_verifier")
+     * 2.0: $callbackUrl; $request->query->get('code');
+     *
+     * @param string $callbackUrl
+     * @param array $sessionData
+     * @param array $query
      */
-//     abstract function createAuthUrl();
-
-// TODO handle callback
+    abstract function createToken($callbackUrl, array $sessionData, array $query);
 }
