@@ -4,6 +4,7 @@ namespace Keboola\OAuth;
 use GuzzleHttp\Client,
     GuzzleHttp\Exception\ClientException;
 use Keboola\Utils\Utils;
+use Keboola\Syrup\Exception\UserException;
 
 class OAuth20 extends AbstractOAuth
 {
