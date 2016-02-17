@@ -18,7 +18,9 @@ class OAuth20 extends AbstractOAuth
     {
         $url = $this->authUrl;
         $url = str_replace('%%redirect_uri%%', $callbackUrl, $url);
+        // DEPRECATED by %%app_key%%
         $url = str_replace('%%client_id%%', $this->appKey, $url);
+        $url = str_replace('%%app_key%%', $this->appKey, $url);
         return ['url' => $url];
     }
 
