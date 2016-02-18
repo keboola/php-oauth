@@ -18,7 +18,7 @@ class OAuth10 extends AbstractOAuth
      * @todo NEEDS app_key/secret, auth_url, request_token_url (1.0)
      * 2.0 will need redir_url along with auth_url, app_key
      */
-    public function createRedirectUrl($callbackUrl)
+    public function createRedirectData($callbackUrl)
     {
         $oauth = new \OAuth($this->appKey, $this->appSecret);
         $tokens = $oauth->getRequestToken($this->getRequestTokenUrl(), $callbackUrl);
