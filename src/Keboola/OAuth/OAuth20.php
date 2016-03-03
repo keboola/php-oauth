@@ -26,6 +26,10 @@ class OAuth20 extends AbstractOAuth
 
     public function createToken($callbackUrl, array $sessionData, array $query)
     {
+        if (empty($query['code'])) {
+            throw new UserException("'code' not returned in query from the auth API!");
+        }
+
         $guzzle = new Client();
         try {
             $response = $guzzle->post(
