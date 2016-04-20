@@ -41,7 +41,10 @@ class OAuth20 extends AbstractOAuth
                         "grant_type" => self::GRANT_TYPE,
                         "redirect_uri" => $callbackUrl,
                         "code" => $query['code']
-                    ]
+                    ],
+                    'headers' => [
+                        'Accept' => 'application/json',
+                    ],
                 ]
             );
         } catch (ClientException $e) {
