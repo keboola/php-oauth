@@ -1,5 +1,5 @@
 language: php
-before_script: composer -d memory_limit=-1 install
+before_script: php -d memory_limit=-1 composer install
 php:
   - 5.4
   - 5.5
