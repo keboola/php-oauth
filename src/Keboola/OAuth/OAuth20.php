@@ -3,7 +3,7 @@ namespace Keboola\OAuth;
 
 use GuzzleHttp\Client,
     GuzzleHttp\Exception\ClientException;
-use Keboola\Utils\Utils;
+use function Keboola\Utils\jsonDecode;
 use Keboola\Syrup\Exception\UserException;
 
 class OAuth20 extends AbstractOAuth
@@ -50,7 +50,7 @@ class OAuth20 extends AbstractOAuth
         } catch (ClientException $e) {
             $errCode = $e->getResponse()->getStatusCode();
             if ($errCode == 400) {
-                $desc = json_decode($e->getResponse()->getBody(true), true);
+                $desc = jsonDecode($e->getResponse()->getBody(true), true);
                 $code = empty($desc["code"]) ? 0 : $desc["code"];
                 $message = empty($desc["error_message"]) ? "Unknown error from API." : $desc["error_message"];
 
@@ -66,6 +66,6 @@ class OAuth20 extends AbstractOAuth
             }
         }
 
-        return Utils::json_decode($response->getBody(true));
+        return jsonDecode($response->getBody(true));
     }
 }
