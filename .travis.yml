@@ -1,5 +1,8 @@
 language: php
-before_script: php -d memory_limit=-1 composer install
+before_script:
+  - phpenv config-add travis-php.ini
+  - composer self-update
+  - composer install
 php:
   - 5.4
   - 5.5
