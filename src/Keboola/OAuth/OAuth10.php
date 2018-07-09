@@ -1,37 +1,39 @@
 <?php
 namespace Keboola\OAuth;
 
+use Keboola\OAuth\Exception\UserException;
+
 class OAuth10 extends AbstractOAuth
 {
-    /**
-     * @var string
-     */
+    /** @var string */
     protected $requestTokenUrl;
+
+    /** @var string */
+    protected $signatureMethod;
 
     public function __construct(array $config)
     {
         $this->requestTokenUrl = $config['request_token_url'];
+        $this->signatureMethod = isset($config['signature_method'])
+            ? $this->validateSignatureMethod($config['signature_method'])
+            : OAUTH_SIG_METHOD_HMACSHA1;
+
         parent::__construct($config);
     }
 
-    /**
-     * @todo NEEDS app_key/secret, auth_url, request_token_url (1.0)
-     * 2.0 will need redir_url along with auth_url, app_key
-     */
     public function createRedirectData($callbackUrl)
     {
-        $oauth = new \OAuth($this->appKey, $this->appSecret);
-        $tokens = $oauth->getRequestToken($this->getRequestTokenUrl(), $callbackUrl);
+        $tokens = $this->getOAuth()->getRequestToken($this->getRequestTokenUrl(), $callbackUrl);
 
         return [
-            'url' => $this->getAuthenticateUrl($tokens["oauth_token"]),
+            'url' => $this->getAuthenticateUrl($tokens['oauth_token']),
             'sessionData' => $tokens
         ];
     }
 
     public function createToken($callbackUrl, array $sessionData, array $query)
     {
-        $oauth = new \OAuth($this->appKey, $this->appSecret);
+        $oauth = $this->getOAuth();
         $oauth->setToken($sessionData['oauth_token'], $sessionData['oauth_token_secret']);
 
         return $oauth->getAccessToken($this->tokenUrl, null, $query['oauth_verifier']);
@@ -47,5 +49,29 @@ class OAuth10 extends AbstractOAuth
         $url = $this->authUrl;
         $url = str_replace('%%oauth_token%%', $oauthToken, $url);
         return $url;
+    }
+
+    protected function validateSignatureMethod($method)
+    {
+        $supportedMethods = [
+            OAUTH_SIG_METHOD_HMACSHA1,
+            OAUTH_SIG_METHOD_RSASHA1,
+            OAUTH_SIG_METHOD_HMACSHA256,
+        ];
+
+        if (!in_array($method, $supportedMethods)) {
+            throw new UserException(sprintf(
+                'Signature method "%s" not supported. Supported methods are "%s"',
+                $method,
+                implode(',', $supportedMethods)
+            ));
+        }
+
+        return $method;
+    }
+
+    protected function getOAuth()
+    {
+        return new \OAuth($this->appKey, $this->appSecret, $this->signatureMethod);
     }
 }
