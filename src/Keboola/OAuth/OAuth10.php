@@ -11,12 +11,16 @@ class OAuth10 extends AbstractOAuth
     /** @var string */
     protected $signatureMethod;
 
+    /** @var string */
+    protected $rsaPrivateKey;
+
     public function __construct(array $config)
     {
         $this->requestTokenUrl = $config['request_token_url'];
         $this->signatureMethod = isset($config['signature_method'])
             ? $this->validateSignatureMethod($config['signature_method'])
             : OAUTH_SIG_METHOD_HMACSHA1;
+        $this->rsaPrivateKey = isset($config['rsa_private_key']) ? $config['rsa_private_key'] : null;
 
         parent::__construct($config);
     }
@@ -72,6 +76,11 @@ class OAuth10 extends AbstractOAuth
 
     protected function getOAuth()
     {
-        return new \OAuth($this->appKey, $this->appSecret, $this->signatureMethod);
+        $oauth = new \OAuth($this->appKey, $this->appSecret, $this->signatureMethod);
+        if ($this->rsaPrivateKey !== null) {
+            $oauth->setRSACertificate($this->rsaPrivateKey);
+        }
+
+        return $oauth;
     }
 }
