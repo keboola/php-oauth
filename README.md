@@ -2,3 +2,7 @@
 
 ## Description
 Handles the user hanshake with provider.
+
+## License
+
+MIT licensed, see [LICENSE](./LICENSE) file.
